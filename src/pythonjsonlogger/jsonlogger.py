@@ -8,6 +8,7 @@ import re
 import six
 from datetime import date, datetime, time
 import traceback
+import os
 
 from inspect import istraceback
 
@@ -42,6 +43,12 @@ class OverrideKeyLogger(logging.Logger):
                 #     raise KeyError("Attempt to overwrite %r in LogRecord" % key)
                 rv.__dict__[key] = extra[key]
         return rv
+
+
+class AppNameFilter(logging.Filter):
+    def filter(self, record):
+        record.app_name = os.getenv('APP_NAME', 'appname')
+        return True
 
 
 def merge_record_extra(record, target, reserved):
