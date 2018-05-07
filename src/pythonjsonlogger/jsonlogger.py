@@ -25,6 +25,7 @@ RESERVED_ATTRS = (
     'funcName', 'levelname', 'levelno', 'lineno', 'module',
     'msecs', 'message', 'msg', 'name', 'pathname', 'process',
     'processName', 'relativeCreated', 'stack_info', 'thread', 'threadName')
+APP_NAME = os.getenv('APP_NAME', 'appname')
 
 
 class OverrideKeyLogger(logging.Logger):
@@ -47,7 +48,7 @@ class OverrideKeyLogger(logging.Logger):
 
 class AppNameFilter(logging.Filter):
     def filter(self, record):
-        record.app_name = os.getenv('APP_NAME', 'appname')
+        record.app_name = APP_NAME
         return True
 
 
