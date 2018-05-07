@@ -5,6 +5,7 @@ to output log data as JSON formatted strings
 import logging
 import json
 import re
+import six
 from datetime import date, datetime, time
 import traceback
 
@@ -23,6 +24,24 @@ RESERVED_ATTRS = (
     'funcName', 'levelname', 'levelno', 'lineno', 'module',
     'msecs', 'message', 'msg', 'name', 'pathname', 'process',
     'processName', 'relativeCreated', 'stack_info', 'thread', 'threadName')
+
+
+class OverrideKeyLogger(logging.Logger):
+    """Custom Logger."""
+
+    def makeRecord(self, name, level, fn, lno, msg, args, exc_info, func=None, extra=None, sinfo=None):
+        """Override default logger to allow overridding internal attributes."""
+        if six.PY2:
+            rv = logging.LogRecord(name, level, fn, lno, msg, args, exc_info, func)
+        else:
+            rv = logging.LogRecord(name, level, fn, lno, msg, args, exc_info, func, sinfo)
+
+        if extra is not None:
+            for key in extra:
+                # if (key in ["message", "asctime"]) or (key in rv.__dict__):
+                #     raise KeyError("Attempt to overwrite %r in LogRecord" % key)
+                rv.__dict__[key] = extra[key]
+        return rv
 
 
 def merge_record_extra(record, target, reserved):
