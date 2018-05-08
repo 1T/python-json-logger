@@ -45,6 +45,8 @@ class OverrideKeyLogger(logging.Logger):
                 rv.__dict__[key] = extra[key]
         return rv
 
+logging.setLoggerClass(OverrideKeyLogger)
+
 
 class AppNameFilter(logging.Filter):
     def filter(self, record):
