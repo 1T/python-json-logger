@@ -25,27 +25,8 @@ RESERVED_ATTRS = (
     'funcName', 'levelname', 'levelno', 'lineno', 'module',
     'msecs', 'message', 'msg', 'name', 'pathname', 'process',
     'processName', 'relativeCreated', 'stack_info', 'thread', 'threadName')
+
 APP_NAME = os.getenv('APP_NAME', 'appname')
-
-
-class OverrideKeyLogger(logging.Logger):
-    """Custom Logger."""
-
-    def makeRecord(self, name, level, fn, lno, msg, args, exc_info, func=None, extra=None, sinfo=None):
-        """Override default logger to allow overridding internal attributes."""
-        if six.PY2:
-            rv = logging.LogRecord(name, level, fn, lno, msg, args, exc_info, func)
-        else:
-            rv = logging.LogRecord(name, level, fn, lno, msg, args, exc_info, func, sinfo)
-
-        if extra is not None:
-            for key in extra:
-                # if (key in ["message", "asctime"]) or (key in rv.__dict__):
-                #     raise KeyError("Attempt to overwrite %r in LogRecord" % key)
-                rv.__dict__[key] = extra[key]
-        return rv
-
-logging.setLoggerClass(OverrideKeyLogger)
 
 
 class AppNameFilter(logging.Filter):
@@ -165,6 +146,9 @@ class JsonFormatter(logging.Formatter):
         """
         for field in self._required_fields:
             log_record[field] = record.__dict__.get(field)
+        for key in message_dict:
+            message_dict['1t_' + key] = message_dict[key]
+            del message_dict[key]
         log_record.update(message_dict)
         merge_record_extra(record, log_record, reserved=self._skip_fields)
 
