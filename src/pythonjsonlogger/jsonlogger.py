@@ -6,11 +6,11 @@ import logging
 import json
 import re
 import six
-from datetime import date, datetime, time
 import traceback
-import os
 
+from datetime import date, datetime, time
 from inspect import istraceback
+from os import getenv
 
 #Support order in python 2.7 and 3
 try:
@@ -26,13 +26,22 @@ RESERVED_ATTRS = (
     'msecs', 'message', 'msg', 'name', 'pathname', 'process',
     'processName', 'relativeCreated', 'stack_info', 'thread', 'threadName')
 
-APP_NAME = os.getenv('APP_NAME', 'appname')
+APP_NAME = getenv('APP_NAME', '')
+
+JOB_ID = getenv('JOB_ID', '')
 
 
 class AppNameFilter(logging.Filter):
     def filter(self, record):
         record.app_name = APP_NAME
         return True
+
+
+class JobIdFilter(logging.Filter):
+    def filter(self, record):
+        record.job_id = APP_NAME
+        return True
+
 
 
 def merge_record_extra(record, target, reserved, prefix=None):
