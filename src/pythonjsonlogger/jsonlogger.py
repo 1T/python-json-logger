@@ -54,6 +54,7 @@ def merge_record_extra(record, target, reserved, prefix=None):
     """
     for key, value in record.__dict__.items():
         #this allows to have numeric keys
+        i = 0
         if (key not in reserved
             and not (hasattr(key, "startswith")
                      and key.startswith('_'))):
@@ -61,6 +62,9 @@ def merge_record_extra(record, target, reserved, prefix=None):
                 target[prefix + key] = value
             else:
                 target[key] = value
+            i += 1
+            if i == 5:
+                break
     return target
 
 
@@ -185,10 +189,7 @@ class JsonFormatter(logging.Formatter):
         message_dict = {}
         new_message_dict = {}
         if isinstance(record.msg, dict):
-            message_dict = record.msg
-            for key in message_dict:
-                new_message_dict[self.key_prefix + key] = message_dict[key]
-            record.message = None
+            return ""
         else:
             record.message = record.getMessage()
         # only format time if needed
