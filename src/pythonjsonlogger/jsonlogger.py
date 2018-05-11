@@ -28,7 +28,7 @@ RESERVED_ATTRS = (
 
 APP_NAME = getenv('APP_NAME', '')
 
-JOB_ID = getenv('JOB_ID', '')
+JOB_ID = getenv('AWS_BATCH_JOB_ID', '')
 
 
 class AppNameFilter(logging.Filter):
