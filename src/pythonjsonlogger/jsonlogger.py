@@ -39,7 +39,7 @@ class AppNameFilter(logging.Filter):
 
 class JobIdFilter(logging.Filter):
     def filter(self, record):
-        record.job_id = APP_NAME
+        record.job_id = JOB_ID
         return True
 
 
