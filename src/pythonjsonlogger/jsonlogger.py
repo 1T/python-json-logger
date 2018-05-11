@@ -58,6 +58,8 @@ def merge_record_extra(record, target, reserved, prefix=None):
         if (key not in reserved
             and not (hasattr(key, "startswith")
                      and key.startswith('_'))):
+            if isinstance(value, dict):
+                continue
             if prefix:
                 target[prefix + key] = value
             else:
