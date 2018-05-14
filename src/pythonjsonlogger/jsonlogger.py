@@ -28,8 +28,8 @@ RESERVED_ATTRS = (
 
 # 1ticket allowed logging fields:
 ALLOWED_KEYS = [
-    'userid', 'listingid', 'remoteid', 'app_name',
-    'orderid', 'invoiceid', 'accountid', 'jobid', 'log_url'
+    'userid', 'listingid', 'remoteid', 'appname',
+    'orderid', 'invoiceid', 'accountid', 'jobid', 'logurl'
 ]
 
 APP_NAME = getenv('APP_NAME', '')
@@ -39,13 +39,13 @@ JOB_ID = getenv('AWS_BATCH_JOB_ID', '')
 
 class AppNameFilter(logging.Filter):
     def filter(self, record):
-        record.app_name = APP_NAME
+        record.appname = APP_NAME
         return True
 
 
 class JobIdFilter(logging.Filter):
     def filter(self, record):
-        record.job_id = JOB_ID
+        record.jobid = JOB_ID
         return True
 
 
