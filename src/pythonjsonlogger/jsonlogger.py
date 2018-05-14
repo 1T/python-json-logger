@@ -26,6 +26,12 @@ RESERVED_ATTRS = (
     'msecs', 'message', 'msg', 'name', 'pathname', 'process',
     'processName', 'relativeCreated', 'stack_info', 'thread', 'threadName')
 
+# 1ticket allowed logging fields:
+ALLOWED_KEYS = [
+    'userid', 'listingid', 'remoteid', 'app_name',
+    'orderid', 'invoiceid', 'accountid', 'jobid'
+]
+
 APP_NAME = getenv('APP_NAME', '')
 
 JOB_ID = getenv('AWS_BATCH_JOB_ID', '')
@@ -44,7 +50,7 @@ class JobIdFilter(logging.Filter):
 
 
 
-def merge_record_extra(record, target, reserved, prefix=None):
+def merge_record_extra(record, target, reserved, prefix=""):
     """
     Merges extra attributes from LogRecord object into target dictionary
 
@@ -52,12 +58,14 @@ def merge_record_extra(record, target, reserved, prefix=None):
     :param target: dict to update
     :param reserved: dict or list with reserved keys to skip
     """
+    i = 0
     for key, value in record.__dict__.items():
         #this allows to have numeric keys
-        i = 0
         if (key not in reserved
             and not (hasattr(key, "startswith")
                      and key.startswith('_'))):
+            if key not in ALLOWED_KEYS:
+                continue
             if isinstance(value, dict):
                 continue
             if prefix:
@@ -137,7 +145,7 @@ class JsonFormatter(logging.Formatter):
         reserved_attrs = kwargs.pop("reserved_attrs", RESERVED_ATTRS)
         self.reserved_attrs = dict(zip(reserved_attrs, reserved_attrs))
         self.timestamp = kwargs.pop("timestamp", False)
-        self.key_prefix = '1t_'
+        self.key_prefix = ''
 
         #super(JsonFormatter, self).__init__(*args, **kwargs)
         logging.Formatter.__init__(self, *args, **kwargs)
@@ -191,7 +199,7 @@ class JsonFormatter(logging.Formatter):
         message_dict = {}
         new_message_dict = {}
         if isinstance(record.msg, dict):
-            return ""
+            record.message = json.dumps(record.msg)
         else:
             record.message = record.getMessage()
         # only format time if needed
