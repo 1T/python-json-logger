@@ -29,7 +29,7 @@ RESERVED_ATTRS = (
 # 1ticket allowed logging fields:
 ALLOWED_KEYS = [
     'userid', 'listingid', 'remoteid', 'app_name',
-    'orderid', 'invoiceid', 'accountid', 'jobid'
+    'orderid', 'invoiceid', 'accountid', 'jobid', 'log_url'
 ]
 
 APP_NAME = getenv('APP_NAME', '')
