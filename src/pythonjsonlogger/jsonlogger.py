@@ -60,7 +60,6 @@ def merge_record_extra(record, target, reserved, prefix=""):
     """
     i = 0
     for key, value in record.__dict__.items():
-        #this allows to have numeric keys
         if (key not in reserved
             and not (hasattr(key, "startswith")
                      and key.startswith('_'))):
@@ -69,9 +68,9 @@ def merge_record_extra(record, target, reserved, prefix=""):
             if isinstance(value, dict):
                 continue
             if prefix:
-                target[prefix + key] = value
+                target[prefix + key] = str(value)
             else:
-                target[key] = value
+                target[key] = str(value)
             i += 1
             if i == 5:
                 break
