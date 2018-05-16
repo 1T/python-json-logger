@@ -31,6 +31,7 @@ ALLOWED_KEYS = [
     'userid', 'listingid', 'remoteid', 'appname',
     'orderid', 'invoiceid', 'accountid', 'jobid', 'logurl'
 ]
+MAX_KEYS = 5
 
 APP_NAME = getenv('APP_NAME', '')
 
@@ -72,7 +73,7 @@ def merge_record_extra(record, target, reserved, prefix=""):
             else:
                 target[key] = str(value)
             i += 1
-            if i == 5:
+            if i == MAX_KEYS:
                 break
     return target
 
