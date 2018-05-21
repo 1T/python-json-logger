@@ -38,6 +38,7 @@ APP_NAME = getenv('APP_NAME', '')
 JOB_ID = getenv('AWS_BATCH_JOB_ID', '')
 
 
+
 class AppNameFilter(logging.Filter):
     def filter(self, record):
         record.appname = APP_NAME
@@ -59,7 +60,37 @@ def merge_record_extra(record, target, reserved, prefix=""):
     :param target: dict to update
     :param reserved: dict or list with reserved keys to skip
     """
-    i = 0
+    default_json = {
+        "args": "",
+        "asctime": "",
+        "exc_info": "",
+        "exc_text": "",
+        "filename": "",
+        "funcName": "",
+        "levelname": "",
+        "levelno": "",
+        "lineno": "",
+        "module": "",
+        "msecs": "",
+        "message": "",
+        "name": "",
+        "pathname": "",
+        "process": "",
+        "processName": "",
+        "relativeCreated": "",
+        "stack_info": "",
+        "thread": "",
+        "threadName": "",
+        "userid": "",
+        "listingid": "",
+        "remoteid": "",
+        "appname": "",
+        "orderid": "",
+        "invoiceid": "",
+        "accountid": "",
+        "jobid": "",
+        "logurl": ""
+    }
     for key, value in record.__dict__.items():
         if (key not in reserved
             and not (hasattr(key, "startswith")
@@ -72,9 +103,9 @@ def merge_record_extra(record, target, reserved, prefix=""):
                 target[prefix + key] = str(value)
             else:
                 target[key] = str(value)
-            i += 1
-            if i == MAX_KEYS:
-                break
+    for key, value in default_json.items():
+        if key not in target:
+            target[key] = value
     return target
 
 
