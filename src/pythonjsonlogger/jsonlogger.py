@@ -60,37 +60,7 @@ def merge_record_extra(record, target, reserved, prefix=""):
     :param target: dict to update
     :param reserved: dict or list with reserved keys to skip
     """
-    default_json = {
-        "args": "",
-        "asctime": "",
-        "exc_info": "",
-        "exc_text": "",
-        "filename": "",
-        "funcName": "",
-        "levelname": "",
-        "levelno": "",
-        "lineno": "",
-        "module": "",
-        "msecs": "",
-        "message": "",
-        "name": "",
-        "pathname": "",
-        "process": "",
-        "processName": "",
-        "relativeCreated": "",
-        "stack_info": "",
-        "thread": "",
-        "threadName": "",
-        "userid": "",
-        "listingid": "",
-        "remoteid": "",
-        "appname": "",
-        "orderid": "",
-        "invoiceid": "",
-        "accountid": "",
-        "jobid": "",
-        "logurl": ""
-    }
+    default_json = {}
     for key, value in record.__dict__.items():
         if (key not in reserved
             and not (hasattr(key, "startswith")
